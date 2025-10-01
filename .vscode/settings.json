@@ -1,7 +1,13 @@
 {
-    "java.project.sourcePaths": [
-        "src"
-    ],
-    "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": []
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar"
+  ]
+,
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-1.8",
+      "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-8.0.462.8-hotspot\\",
+      "default": true
+    }
+  ]
 }
