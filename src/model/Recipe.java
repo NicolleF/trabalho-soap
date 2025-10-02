@@ -5,18 +5,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Recipe {
+    private int id;
     private String name;
     private String instructions;
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
-    public Recipe(String name, String instructions) {
+    public Recipe(int id, String name, String instructions) {
         validateString(name, "Nome da receita não pode ser vazio");
         validateString(instructions, "As instruções da receita devem ser fornecidas");
 
+        this.id = id;
         this.name = name;
         this.instructions = instructions;
     }
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public String getName() {
         return name;
     }
@@ -29,7 +37,7 @@ public class Recipe {
         return recipeIngredients;
     }
 
-    public void addIngredient(Ingredient ingredient, int quantity, String unit) {
+/*    public void addIngredient(Ingredient ingredient, int quantity, String unit) {
         // validar se esse é o melhor meio pra validar a adição do ingrediente
         if (hasIngredient(ingredient)) {
             throw new IllegalArgumentException("Ingrediente já existe nesta receita");
@@ -38,7 +46,7 @@ public class Recipe {
         RecipeIngredient ri = new RecipeIngredient(this, ingredient, quantity, unit);
         recipeIngredients.add(ri);
         ingredient.addRecipeIngredient(ri);
-    }
+    }*/
 
     public void setName(String name) {
         validateString(name, "Nome da receita não pode ser vazio");

@@ -5,14 +5,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Ingredient {
+    private int id;
     private String name;
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
-    public Ingredient(String name) {
+    public Ingredient(int id, String name) {
         validateString(name);
+        this.id = id;
         this.name = name;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public String getName() {
         return name;
     }

@@ -1,19 +1,29 @@
 package model;
 
 public class RecipeIngredient {
+    private int id;
     private Recipe recipe;
     private Ingredient ingredient;
     private int quantity;
     private String unit;
 
-    public RecipeIngredient(Recipe recipe, Ingredient ingredient, int quantity, String unit) {
+    public RecipeIngredient(int id, Recipe recipe, Ingredient ingredient, int quantity, String unit) {
         validateQuantity(quantity);
         validateString(unit);
 
+        this.id = id;
         this.recipe = recipe;
         this.ingredient = ingredient;
         this.quantity = quantity;
         this.unit = unit;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Recipe getRecipe() {
