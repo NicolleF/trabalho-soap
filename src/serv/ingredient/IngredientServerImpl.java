@@ -1,56 +1,63 @@
 package serv.ingredient;
 
 import java.net.URL;
-import java.util.HashMap;
+import java.util.List;
 
-import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import controller.IngredientController;
 import model.Ingredient;
-import serv.recipe.RecipeServer;
 
 @WebService(endpointInterface = "serv.ingredient.IngredientServer")
 public class IngredientServerImpl implements IngredientServer {
-    HashMap<Integer, Ingredient> ingredients = new HashMap<>();
 
-    public static IngredientServer getIngredientServerPort() throws Exception {
-     try {
-            URL url = new URL("http://127.0.0.1:3000/api/ingredient?wsdl");
-            QName qName = new QName("http://ingredient/", "IngredientServerImplService");
+    // public static IngredientServer getIngredientServerPort() throws Exception {
+    //  try {
+    //         URL url = new URL("http://127.0.0.1:8080/api/ingredient?wsdl");
+    //         QName qName = new QName("http://ingredient.serv/", "IngredientServerImplService");
 
-            Service ws = Service.create(url, qName);
+    //         Service ws = Service.create(url, qName);
 
-            return ws.getPort(IngredientServer.class);
-        } catch (Exception ex) {
-            throw new RuntimeException("Erro ao conectar ao IngredientServer: " + ex.getMessage());
-        }   
-    }
-    @Override
-    public void createIngredient(int id, String name){
-        Ingredient ingredient = new Ingredient(id, name);
-        ingredients.put(id, ingredient);
-    }
+    //         return ws.getPort(IngredientServer.class);
+    //     } catch (Exception ex) {
+    //         throw new RuntimeException("Erro ao conectar ao IngredientServer: " + ex.getMessage());
+    //     }   
+    // }
 
     @Override
-    public Ingredient returnIngredientById(int id){
-        return ingredients.get(id);
+    public void createIngredient(String name){
+        //chamar o metodo do controller
+        IngredientController ingredientController = IngredientController.getInstance();
+        ingredientController.createIngredient(name);
     }
 
     @Override
-    public void updateIngredient(int id, String newName){
-        Ingredient ingredient = ingredients.get(id);
-        ingredient.setName(newName);
+    public Ingredient returnIngredientByName(String name){
+        //buscar do controller
+        IngredientController ingredientController = IngredientController.getInstance();
+        return ingredientController.returnIngredientByName(name);
     }
 
     @Override
-    public void deleteIngredient(int id){
-        Ingredient ingredient = ingredients.get(id);
-        
-        //nao sei se essa linha é necessária, validar dps
-        ingredient.getRecipes().forEach(recipe -> recipe.removeIngredient(ingredient));
+    public List<Ingredient> returnAllIngredients(){
+        //buscar do controller
+        IngredientController ingredientController = IngredientController.getInstance();
+        return ingredientController.returnAllIngredients();
+    }
 
-        ingredients.remove(id);
+    @Override
+    public void updateIngredient(String currentName, String newName){
+        //chamar o metodo do controller
+        IngredientController ingredientController = IngredientController.getInstance();
+        ingredientController.updateIngredient(currentName, newName);
+    }
+
+    @Override
+    public void deleteIngredient(String name){
+        //chamar o metodo do controller
+        IngredientController ingredientController = IngredientController.getInstance();
+        ingredientController.deleteIngredient(name);
     }
 }

@@ -1,37 +1,47 @@
 package model;
 
+import java.util.UUID;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class RecipeIngredient {
-    private int id;
-    private Recipe recipe;
-    private Ingredient ingredient;
+    private UUID id;
+    private Ingredient ingredient;  // Apenas ingrediente
     private int quantity;
     private String unit;
 
-    public RecipeIngredient(int id, Recipe recipe, Ingredient ingredient, int quantity, String unit) {
+    // Construtor padrão necessário para JAXB/SOAP
+    public RecipeIngredient() {
+    }
+
+    public RecipeIngredient(UUID id, Ingredient ingredient, int quantity, String unit) {
+        if (ingredient == null) {
+            throw new IllegalArgumentException("Ingrediente não pode ser nulo");
+        }
         validateQuantity(quantity);
         validateString(unit);
 
         this.id = id;
-        this.recipe = recipe;
         this.ingredient = ingredient;
         this.quantity = quantity;
         this.unit = unit;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
-    }
-
-    public Recipe getRecipe() {
-        return recipe;
     }
 
     public Ingredient getIngredient() {
         return ingredient;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     public int getQuantity() {
@@ -69,11 +79,11 @@ public class RecipeIngredient {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         RecipeIngredient that = (RecipeIngredient) obj;
-        return recipe.equals(that.recipe) && ingredient.equals(that.ingredient);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return recipe.hashCode() + ingredient.hashCode();
+        return id.hashCode();
     }
 }

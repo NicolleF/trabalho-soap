@@ -1,5 +1,7 @@
 package serv.ingredient;
 
+import java.util.List;
+
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -10,14 +12,17 @@ import model.Ingredient;
 @SOAPBinding
 public interface IngredientServer {
     @WebMethod
-    public void createIngredient(int id, String name);
+    public void createIngredient(String name);
 
     @WebMethod
-    public Ingredient returnIngredientById(int id);
+    public Ingredient returnIngredientByName(String name);
 
     @WebMethod
-    public void updateIngredient(int id, String newName);
+    public List<Ingredient> returnAllIngredients();
 
     @WebMethod
-    public void deleteIngredient(int id);    
+    public void updateIngredient(String currentName, String newName);
+
+    @WebMethod
+    public void deleteIngredient(String name);    
 }

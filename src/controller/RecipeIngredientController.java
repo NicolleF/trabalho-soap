@@ -1,34 +1,61 @@
-package controller;
+// package controller;
 
-import java.util.HashMap;
+// import java.util.HashMap;
+// import java.util.UUID;
 
-import model.Ingredient;
-import model.Recipe;
-import model.RecipeIngredient;
+// import model.Ingredient;
+// import model.Recipe;
+// import model.RecipeIngredient;
 
-public class RecipeIngredientController {
-    HashMap<Integer, RecipeIngredient> recipeIngredients = new HashMap<>();
-    IngredientController ingredientController = new IngredientController();
-    RecipeController recipeController = new RecipeController();
+// public class RecipeIngredientController {
+//     private HashMap<UUID, RecipeIngredient> recipeIngredients = new HashMap<>();
+//     private IngredientController ingredientController;
+//     private RecipeController recipeController;
 
-    public void createRecipeIngredient(int id, int recipeId, int ingredientId, int quantity, String unit) {
-        Recipe recipe = recipeController.returnRecipeById(recipeId);
-        Ingredient ingredient = ingredientController.returnIngredientById(ingredientId);
-        RecipeIngredient recipeIngredient = new RecipeIngredient(id, recipe, ingredient, quantity, unit);
-        recipeIngredients.put(id, recipeIngredient);
-    }
+//     // Construtor que recebe as instâncias dos controladores
+//     public RecipeIngredientController(RecipeController recipeController, IngredientController ingredientController) {
+//         this.recipeController = recipeController;
+//         this.ingredientController = ingredientController;
+//     }
 
-    public RecipeIngredient returnRecipeIngredientById(int id) {
-        return recipeIngredients.get(id);
-    }
+//     public void createRecipeIngredient(UUID id, UUID recipeId, String ingredientName, int quantity, String unit) {
+//         if (recipeIngredients.containsKey(id)) {
+//             throw new IllegalArgumentException("Já existe um RecipeIngredient com este ID");
+//         }
+        
+//         Recipe recipe = recipeController.returnRecipeById(recipeId);
+//         Ingredient ingredient = ingredientController.returnIngredientByName(ingredientName);
+        
+//         RecipeIngredient recipeIngredient = new RecipeIngredient(id, recipe, ingredient, quantity, unit);
+//         recipeIngredients.put(id, recipeIngredient);
+//     }
 
-    public void updateRecipeIngredient(int id, int newQuantity, String newUnit) {
-        RecipeIngredient recipeIngredient = recipeIngredients.get(id);
-        recipeIngredient.setQuantity(newQuantity);
-        recipeIngredient.setUnit(newUnit);
-    }
+//     public RecipeIngredient returnRecipeIngredientById(UUID id) {
+//         RecipeIngredient recipeIngredient = recipeIngredients.get(id);
+//         if (recipeIngredient == null) {
+//             throw new IllegalArgumentException("RecipeIngredient não encontrado com o ID: " + id);
+//         }
+//         return recipeIngredient;
+//     }
 
-    public void deleteRecipeIngredient(int id) {
-        recipeIngredients.remove(id);
-    }
-}
+//     public HashMap<UUID, RecipeIngredient> returnAllRecipeIngredients() {
+//         return recipeIngredients;
+//     }
+
+//     public void updateRecipeIngredient(UUID id, int newQuantity, String newUnit) {
+//         RecipeIngredient recipeIngredient = recipeIngredients.get(id);
+//         if (recipeIngredient == null) {
+//             throw new IllegalArgumentException("RecipeIngredient não encontrado com o ID: " + id);
+//         }
+//         recipeIngredient.setQuantity(newQuantity);
+//         recipeIngredient.setUnit(newUnit);
+//     }
+
+//     public void deleteRecipeIngredient(UUID id) {
+//         RecipeIngredient recipeIngredient = recipeIngredients.get(id);
+//         if (recipeIngredient == null) {
+//             throw new IllegalArgumentException("RecipeIngredient não encontrado com o ID: " + id);
+//         }
+//         recipeIngredients.remove(id);
+//     }
+// }

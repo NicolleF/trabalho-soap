@@ -1,32 +1,93 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import model.Ingredient;
 
 public class IngredientController {
-    HashMap<Integer, Ingredient> ingredients = new HashMap<>();
+    private static IngredientController instance;
+    private HashMap<String, Ingredient> ingredients = new HashMap<>();
 
-    public void createIngredient(int id, String name){
-        Ingredient ingredient = new Ingredient(id, name);
-        ingredients.put(id, ingredient);
+    // Construtor privado para implementar Singleton
+    private IngredientController() {
     }
 
-    public Ingredient returnIngredientById(int id){
-        return ingredients.get(id);
+    public static IngredientController getInstance() {
+        if (instance == null) {
+            instance = new IngredientController();
+        }
+        return instance;
     }
 
-    public void updateIngredient(int id, String newName){
-        Ingredient ingredient = ingredients.get(id);
-        ingredient.setName(newName);
+    public void createIngredient(String name){
+        String normalizedName = normalizeString(name);
+        if (ingredients.containsKey(normalizedName)) {
+            throw new IllegalArgumentException("Já existe um ingrediente com o nome: " + name);
+        }
+        Ingredient ingredient = new Ingredient(name);
+        ingredients.put(normalizedName, ingredient);
     }
 
-    public void deleteIngredient(int id){
-        Ingredient ingredient = ingredients.get(id);
+    public Ingredient returnIngredientByName(String name){
+        Ingredient ingredient = ingredients.get(normalizeString(name));
+        if (ingredient == null) {
+            throw new IllegalArgumentException("Ingrediente não encontrado com o nome: " + name);
+        }
+        return ingredient;
+    }
+
+    public List<Ingredient> returnAllIngredients(){
+        return new ArrayList<>(ingredients.values());
+    }
+
+    public void updateIngredient(String currentName, String newName){
+        String normalizedCurrentName = normalizeString(currentName);
+        String normalizedNewName = normalizeString(newName);
+
+        Ingredient ingredient = ingredients.get(normalizedCurrentName);
+        if (ingredient == null) {
+            throw new IllegalArgumentException("Ingrediente não encontrado com o nome: " + currentName);
+        }
         
-        //nao sei se essa linha é necessária, validar dps
-        ingredient.getRecipes().forEach(recipe -> recipe.removeIngredient(ingredient));
+        // Se o novo nome é diferente, verificar se já existe
+        if (!normalizedCurrentName.equals(normalizedNewName) && ingredients.containsKey(normalizedNewName)) {
+            throw new IllegalArgumentException("Já existe um ingrediente com o nome: " + newName);
+        }
+        
+        // Atualizar o ingrediente
+        ingredient.setName(newName);
+        
+        // Se o nome mudou, atualizar a chave no HashMap
+        if (!normalizedCurrentName.equals(normalizedNewName)) {
+            ingredients.remove(normalizedCurrentName);
+            ingredients.put(normalizedNewName, ingredient);
+        }
+    }
 
-        ingredients.remove(id);
+    public void deleteIngredient(String name){
+        String normalizedName = normalizeString(name);
+        Ingredient ingredient = ingredients.get(normalizedName);
+        if (ingredient == null) {
+            throw new IllegalArgumentException("Ingrediente não encontrado com o nome: " + name);
+        }
+        
+        // Verificar se o ingrediente está associado a alguma receita
+        RecipeController recipeController = RecipeController.getInstance();
+        if (recipeController.isIngredientUsedInAnyRecipe(ingredient)) {
+            List<model.Recipe> recipesUsingIngredient = recipeController.getRecipesByIngredient(ingredient);
+            String recipeNames = recipesUsingIngredient.stream()
+                    .map(model.Recipe::getName)
+                    .collect(java.util.stream.Collectors.joining(", "));
+            throw new IllegalArgumentException("Não é possível excluir o ingrediente '" + name + 
+                    "' pois ele está sendo usado nas seguintes receitas: " + recipeNames);
+        }
+
+        ingredients.remove(normalizedName);
+    }
+
+    private String normalizeString(String value) {
+        return value == null ? null : value.trim().toLowerCase();
     }
 }

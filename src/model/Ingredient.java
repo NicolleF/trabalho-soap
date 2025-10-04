@@ -1,26 +1,18 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 public class Ingredient {
-    private int id;
     private String name;
-    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
-    public Ingredient(int id, String name) {
+    // Construtor padrão necessário para JAXB/SOAP
+    public Ingredient() {
+    }
+
+    public Ingredient(String name) {
         validateString(name);
-        this.id = id;
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
     
     public String getName() {
@@ -30,26 +22,6 @@ public class Ingredient {
     public void setName(String name) {
         validateString(name);
         this.name = name;
-    }
-
-    public List<RecipeIngredient> getRecipeIngredients() {
-        return recipeIngredients;
-    }
-
-    protected void addRecipeIngredient(RecipeIngredient recipeIngredient) {
-        if (!recipeIngredients.contains(recipeIngredient)) {
-            recipeIngredients.add(recipeIngredient);
-        }
-    }
-
-    protected void removeRecipeIngredient(RecipeIngredient recipeIngredient) {
-        recipeIngredients.remove(recipeIngredient);
-    }
-
-    public List<Recipe> getRecipes() {
-        return recipeIngredients.stream()
-                .map(RecipeIngredient::getRecipe)
-                .collect(Collectors.toList());
     }
 
     private void validateString(String value) {

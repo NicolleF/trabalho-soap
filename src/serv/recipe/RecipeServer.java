@@ -1,6 +1,7 @@
 package serv.recipe;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -13,17 +14,29 @@ import model.Recipe;
 public interface RecipeServer {
 
     @WebMethod
-    public void createRecipe(int id, String name, String instructions);
+    public void createRecipe(String name, String instructions);
 
     @WebMethod
-    public Recipe returnRecipeById(int id);
+    public Recipe returnRecipeById(UUID id);
 
     @WebMethod
-    public HashMap<Integer, Recipe> returnAllRecipes();
+    public List<Recipe> returnAllRecipes();
+
+    @WebMethod
+    public List<Recipe> returnRecipesByName(String name);
     
     @WebMethod
-    public void updateRecipe(int id, String newName, String newInstructions);
+    public void updateRecipe(UUID id, String newName, String newInstructions);
 
     @WebMethod
-    public void deleteRecipe(int id);
+    public void deleteRecipe(UUID id);
+
+    @WebMethod
+    public void addIngredientToRecipe(UUID recipeId, String ingredientName, int quantity, String unit);
+
+    @WebMethod
+    public void removeIngredientFromRecipe(UUID recipeId, String ingredientName);
+
+    @WebMethod
+    public void updateIngredientInRecipe(UUID recipeId, String ingredientName, int newQuantity, String newUnit);
 }

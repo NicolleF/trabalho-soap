@@ -2,15 +2,25 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Recipe {
-    private int id;
+    private UUID id;
     private String name;
     private String instructions;
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
-    public Recipe(int id, String name, String instructions) {
+    public Recipe() {
+        this.recipeIngredients = new ArrayList<>();
+    }
+
+    public Recipe(UUID id, String name, String instructions) {
         validateString(name, "Nome da receita não pode ser vazio");
         validateString(instructions, "As instruções da receita devem ser fornecidas");
 
@@ -19,10 +29,10 @@ public class Recipe {
         this.instructions = instructions;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
     public String getName() {
@@ -33,20 +43,25 @@ public class Recipe {
         return instructions;
     }
 
+    @XmlElementWrapper(name = "recipeIngredients")
+    @XmlElement(name = "recipeIngredient")
     public List<RecipeIngredient> getRecipeIngredients() {
         return recipeIngredients;
     }
 
-/*    public void addIngredient(Ingredient ingredient, int quantity, String unit) {
+    public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
+
+    public void addIngredient(Ingredient ingredient, int quantity, String unit) {
         // validar se esse é o melhor meio pra validar a adição do ingrediente
         if (hasIngredient(ingredient)) {
             throw new IllegalArgumentException("Ingrediente já existe nesta receita");
         }
-        
-        RecipeIngredient ri = new RecipeIngredient(this, ingredient, quantity, unit);
+
+        RecipeIngredient ri = new RecipeIngredient(UUID.randomUUID(), ingredient, quantity, unit);
         recipeIngredients.add(ri);
-        ingredient.addRecipeIngredient(ri);
-    }*/
+    }
 
     public void setName(String name) {
         validateString(name, "Nome da receita não pode ser vazio");
@@ -71,8 +86,21 @@ public class Recipe {
         
         if (toRemove != null) {
             recipeIngredients.remove(toRemove);
-            ingredient.removeRecipeIngredient(toRemove);
         }
+    }
+
+    public void updateIngredient(Ingredient ingredient, int newQuantity, String newUnit) {
+        RecipeIngredient toUpdate = recipeIngredients.stream()
+                .filter(ri -> ri.getIngredient().equals(ingredient))
+                .findFirst()
+                .orElse(null);
+        
+        if (toUpdate == null) {
+            throw new IllegalArgumentException("Ingrediente não encontrado nesta receita");
+        }
+        
+        toUpdate.setQuantity(newQuantity);
+        toUpdate.setUnit(newUnit);
     }
 
     public List<Ingredient> getIngredients() {

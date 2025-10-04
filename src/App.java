@@ -1,64 +1,55 @@
-import java.util.HashMap;
+import java.net.URL;
+import java.util.List;
 
-import model.Ingredient;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+
 import model.Recipe;
-import serv.ingredient.IngredientServerPublisher;
+import serv.ingredient.IngredientServer;
 import serv.recipe.RecipeServer;
-import serv.recipe.RecipeServerImpl;
-import serv.recipe.RecipeServerPublisher;
 
 public class App {
-    public App(){
-        initPublisher();
-        initTests();
+    public static void main(String[] args) throws Exception {
+        IngredientServer ingredientServer = getIngredientServer();
+        RecipeServer recipeServer = getRecipeServer();
+
+        ingredientServer.createIngredient("Farinha");
+        System.out.println("Ingrediente 'Farinha' criado com sucesso.");
+
+        ingredientServer.createIngredient("Leite");
+        System.out.println("Ingrediente 'Leite' criado com sucesso.");
+
+        ingredientServer.createIngredient("Chocolate");
+        System.out.println("Ingrediente 'Chocolate' criado com sucesso.");
+
+        recipeServer.createRecipe("Chocolate quente", "1. Misture o leite com o chocolate em pó.\n2. Aqueça até ferver.\n3. Sirva quente.");
+        List<Recipe> recipes = recipeServer.returnRecipesByName("Chocolate quente");
+        System.out.println("Receitas encontradas: " + recipes.size());
+        
+        recipeServer.addIngredientToRecipe(recipes.get(0).getId(), "Chocolate", 100, "gramas");
+        recipeServer.addIngredientToRecipe(recipes.get(0).getId(), "Leite", 200, "ml");
+
+        Recipe updatedRecipe = recipeServer.returnRecipeById(recipes.get(0).getId());
+        System.out.println("ID: " + updatedRecipe.getId());
+        System.out.println("Nome: " + updatedRecipe.getName());
+        System.out.println("Instruções: " + updatedRecipe.getInstructions());
+        System.out.println("Ingredientes:");
+        updatedRecipe.getRecipeIngredients().forEach(ri -> {
+            System.out.println("- " + ri.getIngredient().getName() + ": " + ri.getQuantity() + " " + ri.getUnit());
+        });
     }
 
-    public void initPublisher(){
-        RecipeServerPublisher.main(null);
-        IngredientServerPublisher.main(null);
+    public static RecipeServer getRecipeServer() throws Exception {
+        URL url = new URL("http://127.0.0.1:8080/api/recipe?wsdl");
+        QName qName = new QName("http://recipe.serv/", "RecipeServerImplService");
+        Service ws = Service.create(url, qName);
+        return ws.getPort(RecipeServer.class);
     }
 
-    public void initTests(){
-        try{
-            Recipe recipe = handleRecipeTests();
-            Ingredient ingredient = handleIngredientTests();
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public Recipe handleRecipeTests() throws Exception{
-        RecipeServer recipeServer = RecipeServerImpl.getRecipeServerPort();
-
-        recipeServer.createRecipe(1, "Bolo de Chocolate", "1. Misture os ingredientes.\n2. Asse por 30 minutos.");
-        recipeServer.createRecipe(2, "Salada Caesar", "1. Misture os ingredientes.\n2. Sirva gelado.");
-
-        Recipe recipe1 = recipeServer.returnRecipeById(1);
-
-        HashMap<Integer, Recipe> allRecipes = recipeServer.returnAllRecipes();
-
-        recipeServer.updateRecipe(1, "Bolo de Chocolate Atualizado", "1. Misture os ingredientes.\n2. Asse por 40 minutos.");
-
-        recipeServer.deleteRecipe(2);
-        return recipe1;
-    }
-
-    public Ingredient handleIngredientTests() throws Exception{
-        serv.ingredient.IngredientServer ingredientServer = serv.ingredient.IngredientServerImpl.getIngredientServerPort();
-
-        ingredientServer.createIngredient(1, "Farinha de Trigo");
-        ingredientServer.createIngredient(2, "Ovos");
-
-        Ingredient ingredient1 = ingredientServer.returnIngredientById(1);
-
-        ingredientServer.updateIngredient(1, "Farinha de Trigo Integral");
-
-        ingredientServer.deleteIngredient(2);
-
-        return ingredient1;
-    }
-
-    public static void main(String[] args) {
-        new App();
+    public static IngredientServer getIngredientServer() throws Exception {
+        URL url = new URL("http://127.0.0.1:8080/api/ingredient?wsdl");
+        QName qName = new QName("http://ingredient.serv/", "IngredientServerImplService");
+        Service ws = Service.create(url, qName);
+        return ws.getPort(IngredientServer.class);
     }
 }
