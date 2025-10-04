@@ -97,6 +97,11 @@ public class App {
             });
         }
 
+        // ====== Removendo um ingrediente ======
+        recipeServer.removeIngredientFromRecipe(boloChocolate.getId(), "Fermento");
+        ingredientServer.deleteIngredient("Fermento");
+        System.out.println("\nIngrediente 'Fermento' removido da receita 'Bolo de Chocolate' e do sistema.");
+
         // ====== Removendo uma receita ======
         System.out.println("\nRemovendo a receita 'Panqueca Simples'...");
         recipeServer.deleteRecipe(panqueca.getId());
