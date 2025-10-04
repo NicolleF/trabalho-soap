@@ -10,7 +10,6 @@ public class IngredientController {
     private static IngredientController instance;
     private HashMap<String, Ingredient> ingredients = new HashMap<>();
 
-    // Construtor privado para implementar Singleton
     private IngredientController() {
     }
 
@@ -51,15 +50,12 @@ public class IngredientController {
             throw new IllegalArgumentException("Ingrediente não encontrado com o nome: " + currentName);
         }
         
-        // Se o novo nome é diferente, verificar se já existe
         if (!normalizedCurrentName.equals(normalizedNewName) && ingredients.containsKey(normalizedNewName)) {
             throw new IllegalArgumentException("Já existe um ingrediente com o nome: " + newName);
         }
         
-        // Atualizar o ingrediente
         ingredient.setName(newName);
         
-        // Se o nome mudou, atualizar a chave no HashMap
         if (!normalizedCurrentName.equals(normalizedNewName)) {
             ingredients.remove(normalizedCurrentName);
             ingredients.put(normalizedNewName, ingredient);
@@ -73,7 +69,6 @@ public class IngredientController {
             throw new IllegalArgumentException("Ingrediente não encontrado com o nome: " + name);
         }
         
-        // Verificar se o ingrediente está associado a alguma receita
         RecipeController recipeController = RecipeController.getInstance();
         if (recipeController.isIngredientUsedInAnyRecipe(ingredient)) {
             List<model.Recipe> recipesUsingIngredient = recipeController.getRecipesByIngredient(ingredient);

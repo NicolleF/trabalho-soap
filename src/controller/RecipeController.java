@@ -24,7 +24,6 @@ public class RecipeController {
     }
 
     public void createRecipe(String name, String instructions){
-        // Verificar se já existe receita com mesmo conteúdo
         if (recipeContentExists(name, instructions)) {
             throw new IllegalArgumentException("Já existe uma receita com o mesmo nome e instruções");
         }
@@ -45,7 +44,6 @@ public class RecipeController {
         return recipe;
     }
 
-    //retorna uma lista de receitas
     public List<Recipe> returnAllRecipes(){
         return new ArrayList<>(recipes.values());
     }
@@ -70,19 +68,17 @@ public class RecipeController {
             throw new IllegalArgumentException("Receita não encontrada com o ID: " + id);
         }
         
-        // Verificar se o novo conteúdo já existe em outra receita
         String normalizedNewName = normalizeString(newName);
         String normalizedNewInstructions = normalizeString(newInstructions);
         
         boolean duplicateExists = recipes.values().stream()
                 .anyMatch(otherRecipe -> 
-                    !otherRecipe.getId().equals(id) && // Não comparar com ela mesma
+                    !otherRecipe.getId().equals(id) &&
                     normalizeString(otherRecipe.getName()).equals(normalizedNewName) &&
                     normalizeString(otherRecipe.getInstructions()).equals(normalizedNewInstructions)
                 );
         
         if (duplicateExists) {
-            //é interessante dizer o nome da receita que ja existe
             throw new IllegalArgumentException("Já existe outra receita com o mesmo nome e instruções");
         }
         
@@ -96,9 +92,7 @@ public class RecipeController {
             throw new IllegalArgumentException("Receita não encontrada com o ID: " + id);
         }
 
-        //nao sei se essa linha é necessária, validar dps
-        recipe.getRecipeIngredients().forEach(ri -> recipe.removeIngredient(ri.getIngredient()));
-
+        recipe.getRecipeIngredients().removeIf(ri -> true);
         recipes.remove(id);
     }
 
@@ -118,7 +112,6 @@ public class RecipeController {
         if (recipe == null) {
             throw new IllegalArgumentException("Receita não encontrada com o ID: " + recipeId);
         }
-        //remove da ligação entre ingrediente e receita, não remove o ingrediente do sistema
         IngredientController ingredientController = IngredientController.getInstance();
         Ingredient ingredient = ingredientController.returnIngredientByName(ingredientName);
         recipe.removeIngredient(ingredient);
@@ -130,7 +123,6 @@ public class RecipeController {
             throw new IllegalArgumentException("Receita não encontrada com o ID: " + recipeId);
         }
 
-        //atualiza na ligação entre ingrediente e receita
         IngredientController ingredientController = IngredientController.getInstance();
         Ingredient ingredient = ingredientController.returnIngredientByName(ingredientName);
         recipe.updateIngredient(ingredient, newQuantity, newUnit);

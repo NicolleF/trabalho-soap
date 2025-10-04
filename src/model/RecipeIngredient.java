@@ -7,11 +7,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class RecipeIngredient {
     private UUID id;
-    private Ingredient ingredient;  // Apenas ingrediente
+    private Ingredient ingredient;
     private int quantity;
     private String unit;
 
-    // Construtor padrão necessário para JAXB/SOAP
     public RecipeIngredient() {
     }
 

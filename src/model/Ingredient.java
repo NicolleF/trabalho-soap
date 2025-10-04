@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Ingredient {
     private String name;
 
-    // Construtor padrão necessário para JAXB/SOAP
     public Ingredient() {
     }
 

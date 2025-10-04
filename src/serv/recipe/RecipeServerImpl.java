@@ -1,12 +1,8 @@
 package serv.recipe;
-
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
 import javax.jws.WebService;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 
 import controller.RecipeController;
 import model.Recipe;
@@ -14,23 +10,9 @@ import model.Recipe;
 @WebService(endpointInterface = "serv.recipe.RecipeServer")
 public class RecipeServerImpl implements RecipeServer {
     private RecipeController recipeController = RecipeController.getInstance();
-
-    // public static RecipeServer getRecipeServerPort() throws Exception {
-    //     try {
-    //         URL url = new URL("http://127.0.0.1:8081/api/recipe?wsdl");
-    //         QName qName = new QName("http://recipe.serv/", "RecipeServerImplService");
-
-    //         Service ws = Service.create(url, qName);
-
-    //         return ws.getPort(RecipeServer.class);
-    //     } catch (Exception ex) {
-    //         throw new RuntimeException("Erro ao conectar ao RecipeServer: " + ex.getMessage());
-    //     }
-    // }
     
     @Override
     public void createRecipe(String name, String instructions){
-        //pegar do controller recipe
         recipeController.createRecipe(name, instructions);
     }
 
