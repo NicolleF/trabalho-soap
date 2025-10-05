@@ -54,7 +54,6 @@ public class Recipe {
     }
 
     public void addIngredient(Ingredient ingredient, int quantity, String unit) {
-        // validar se esse é o melhor meio pra validar a adição do ingrediente
         if (hasIngredient(ingredient)) {
             throw new IllegalArgumentException("Ingrediente já existe nesta receita");
         }

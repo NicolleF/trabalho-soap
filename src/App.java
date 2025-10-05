@@ -4,6 +4,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 
+import model.Ingredient;
 import model.Recipe;
 import serv.ingredient.IngredientServer;
 import serv.recipe.RecipeServer;
@@ -46,7 +47,7 @@ public class App {
         recipeServer.addIngredientToRecipe(chocolateQuente.getId(), "Chocolate", 100, "gramas");
         recipeServer.addIngredientToRecipe(chocolateQuente.getId(), "Leite", 200, "ml");
 
-        System.out.println("Receita 'Chocolate quente' criada e ingredientes adicionados.\n");
+        System.out.println("Receita 'Chocolate quente' criada e ingredientes adicionados.");
 
         // ====== Receita 2 ======
         recipeServer.createRecipe("Bolo de Chocolate",
@@ -60,7 +61,7 @@ public class App {
         recipeServer.addIngredientToRecipe(boloChocolate.getId(), "Leite", 150, "ml");
         recipeServer.addIngredientToRecipe(boloChocolate.getId(), "Fermento", 10, "gramas");
 
-        System.out.println("Receita 'Bolo de Chocolate' criada e ingredientes adicionados.\n");
+        System.out.println("Receita 'Bolo de Chocolate' criada e ingredientes adicionados.");
 
         // ====== Receita 3 ======
         recipeServer.createRecipe("Panqueca Simples",
@@ -71,7 +72,7 @@ public class App {
         recipeServer.addIngredientToRecipe(panqueca.getId(), "Leite", 300, "ml");
         recipeServer.addIngredientToRecipe(panqueca.getId(), "Ovo", 2, "unidades");
 
-        System.out.println("Receita 'Panqueca Simples' criada e ingredientes adicionados.\n");
+        System.out.println("Receita 'Panqueca Simples' criada e ingredientes adicionados.");
 
         // ====== Receita 4 ======
         recipeServer.createRecipe("Vitamina de Morango",
@@ -82,7 +83,7 @@ public class App {
         recipeServer.addIngredientToRecipe(vitamina.getId(), "Leite", 200, "ml");
         recipeServer.addIngredientToRecipe(vitamina.getId(), "Açúcar", 50, "gramas");
 
-        System.out.println("Receita 'Vitamina de Morango' criada e ingredientes adicionados.\n");
+        System.out.println("Receita 'Vitamina de Morango' criada e ingredientes adicionados.");
 
         // ====== Exibindo todas as receitas ======
         List<Recipe> allRecipes = recipeServer.returnAllRecipes();
@@ -99,8 +100,23 @@ public class App {
 
         // ====== Removendo um ingrediente ======
         recipeServer.removeIngredientFromRecipe(boloChocolate.getId(), "Fermento");
+        System.out.println("\nIngrediente 'Fermento' removido da receita 'Bolo de Chocolate'");
         ingredientServer.deleteIngredient("Fermento");
-        System.out.println("\nIngrediente 'Fermento' removido da receita 'Bolo de Chocolate' e do sistema.");
+        System.out.println("Ingrediente 'Fermento' removido do sistema.");
+
+        // ======= Confirmando remoção do ingrediente ======
+        List<Recipe> updatedBoloRecipes = recipeServer.returnRecipesByName("Bolo de Chocolate");
+        System.out.println("\nIngredientes atualizados da receita 'Bolo de Chocolate':");
+        updatedBoloRecipes.forEach(r -> {
+            r.getRecipeIngredients().forEach(ri -> {
+                System.out.println("- " + ri.getIngredient().getName() + ": " + ri.getQuantity() + " " + ri.getUnit());
+            });
+        });
+
+        // ======= Confirmando remoção do ingrediente ======
+        List<Ingredient> allIngredients = ingredientServer.returnAllIngredients();
+        System.out.println("\n===== INGREDIENTES CADASTRADOS =====");
+        allIngredients.forEach(i -> System.out.println("- " + i.getName()));
 
         // ====== Removendo uma receita ======
         System.out.println("\nRemovendo a receita 'Panqueca Simples'...");

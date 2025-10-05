@@ -144,13 +144,11 @@ public class RecipeController {
                 );
     }
 
-    // Método para verificar se um ingrediente está sendo usado em alguma receita
     public boolean isIngredientUsedInAnyRecipe(Ingredient ingredient) {
         return recipes.values().stream()
                 .anyMatch(recipe -> recipe.hasIngredient(ingredient));
     }
 
-    // Método para retornar as receitas que usam um determinado ingrediente
     public List<Recipe> getRecipesByIngredient(Ingredient ingredient) {
         return recipes.values().stream()
                 .filter(recipe -> recipe.hasIngredient(ingredient))
